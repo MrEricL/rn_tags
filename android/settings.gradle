@@ -1,0 +1,3 @@
+rootProject.name = 'tags'
+
+include ':app'
