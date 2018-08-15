@@ -6,15 +6,13 @@ import Tags from "./react-native-tags"
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      custom: true,
-      initTags: ["dog", "cat", "chicken"],
-      initTagsCustom: ["dog", "cat", "chicken", "Add Custom"],
-    }
+
   }
 
   render() {
-    
+    const initTags = ["dog", "cat", "chicken"];
+    const initTagsCustom = initTags.push("Add Custom")
+    let custom = false;
     return (
       <View style={styles.container}>
         <Tags
@@ -26,7 +24,7 @@ export default class App extends React.Component {
           onChangeTags={tags => console.log()} //console.log(tags)}
           onTagPress={(index, tagLabel) => {
             if (this.userTags) {
-              if (this.state.initTags.includes(tagLabel)) {
+              if (initTags.includes(tagLabel)) {
                 const oldrecTags = this.recTags.state.tags;
                 const newrecTags = oldrecTags.slice();
                 newrecTags.push(tagLabel);
@@ -40,19 +38,32 @@ export default class App extends React.Component {
 
         <Tags
           ref={recTags => (this.recTags = recTags)}
-          readonly = {this.state.custom}
-          initialText=""
-          initialTags={this.state.initTagsCustom}
+          readonly = {true}
+          initialText="monkey"
+          initialTags={initTags}
           onChangeTags={tags => {
             if (this.userTags) {
-              //Pass
+              /*
+              const oldTags = this.userTags.state.tags;
+              const tagThatWasAdded = this.recTags.state.tags.slice().pop();
+              const newTags = oldTags.slice();
+              newTags.push(`${tagThatWasAdded} l`);
+              this.userTags.setState({ tags: newTags });
+
+              
+              const oldrecTags = this.recTags.state.tags;
+              const newrecTags = oldrecTags.slice();
+              console.log(newrecTags.slice())
+              console.log(newrecTags.slice(-1))
+              this.recTags.setState({ tags: newrecTags });
+              */
             }
           }}
           onTagPress={(index, tagLabel) => {
             if (this.userTags) {
 
               if (tagLabel == "Add Custom" ){
-                this.setState({custom: false});
+                this.recTags.setState({ readonly: false });
               }
               else{
               //modifies the top tags
