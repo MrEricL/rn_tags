@@ -7,7 +7,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      recTagsIsReadonly: true,
+      recTagsIsReadOnly: true,
       userTagsArray: [],
       recTagsArray: ['dog', 'cat', 'chicken', 'Add Custom'],
     };
@@ -28,7 +28,7 @@ export default class App extends React.Component {
               //adds to other array
               const oldrecTags = this.state.recTagsArray;
               const newrecTags = oldrecTags.slice();
-              this.state.recTagsIsReadonly
+              this.state.recTagsIsReadOnly
                 ? newrecTags.splice(recLen - 1, 0, tagLabel)
                 : newrecTags.push(tagLabel);
 
@@ -43,7 +43,7 @@ export default class App extends React.Component {
 
         <Tags
           ref={recTags => (this.recTags = recTags)}
-          readonly={this.state.recTagsIsReadonly}
+          readonly={this.state.recTagsIsReadOnly}
           initialTags={this.state.recTagsArray}
           onChangeTags={tags => {
             if (this.userTags) {
@@ -65,7 +65,7 @@ export default class App extends React.Component {
           onTagPress={(index, tagLabel) => {
             if (this.userTags) {
               if (tagLabel == 'Add Custom') {
-                this.setState({ recTagsIsReadonly: false });
+                this.setState({ recTagsIsReadOnly: false });
                 //removes the custom
                 this.state.recTagsArray.splice(recLen - 1, 1);
               } else {
