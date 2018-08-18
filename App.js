@@ -1,55 +1,58 @@
-import React from "react";
-import { Text, View, StyleSheet, TextInput } from "react-native";
+import React from 'react';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
 //import Tags from "react-native-tags";
-import Tags from "./react-native-tags"
+import Tags from './react-native-tags';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      recTagsIsReadonly: true,
+      userTagsArray: [],
+      recTagsArray: ['dog', 'cat', 'chicken', 'Add Custom'],
+    };
   }
 
   render() {
-    const initTags = ["dog", "cat", "chicken"];
-    const initTagsCustom = initTags.push("Add Custom")
-    let custom = false;
+    const recLen = this.state.recTagsArray.length;
     return (
       <View style={styles.container}>
         <Tags
-          readonly = {true}
+          readonly={true}
           ref={userTags => (this.userTags = userTags)}
-          //tagContainerStyle = {styles.tagColor}
           initialText=""
-          initialTags={[]}
+          initialTags={this.state.userTagsArray}
           onChangeTags={tags => console.log()} //console.log(tags)}
           onTagPress={(index, tagLabel) => {
             if (this.userTags) {
-              if (initTags.includes(tagLabel)) {
-                const oldrecTags = this.recTags.state.tags;
-                const newrecTags = oldrecTags.slice();
-                newrecTags.push(tagLabel);
-                this.recTags.setState({ tags: newrecTags });
-              }
+              //adds to other array
+              const oldrecTags = this.state.recTagsArray;
+              const newrecTags = oldrecTags.slice();
+              this.state.recTagsIsReadonly
+                ? newrecTags.splice(recLen - 1, 0, tagLabel)
+                : newrecTags.push(tagLabel);
+
+              //removes on click
+              this.state.userTagsArray.splice(index, 1);
+              this.setState({ recTagsArray: newrecTags });
             }
           }}
-          containerStyle={{ justifyContent: "center" }}
-          inputStyle={{ backgroundColor: "white" }}
+          containerStyle={{ justifyContent: 'center' }}
+          inputStyle={{ backgroundColor: 'white' }}
         />
 
         <Tags
           ref={recTags => (this.recTags = recTags)}
-          readonly = {true}
-          initialText="monkey"
-          initialTags={initTags}
+          readonly={this.state.recTagsIsReadonly}
+          initialTags={this.state.recTagsArray}
           onChangeTags={tags => {
             if (this.userTags) {
-              /*
+              /* Ref System Example
               const oldTags = this.userTags.state.tags;
               const tagThatWasAdded = this.recTags.state.tags.slice().pop();
               const newTags = oldTags.slice();
               newTags.push(`${tagThatWasAdded} l`);
               this.userTags.setState({ tags: newTags });
-
               
               const oldrecTags = this.recTags.state.tags;
               const newrecTags = oldrecTags.slice();
@@ -61,26 +64,25 @@ export default class App extends React.Component {
           }}
           onTagPress={(index, tagLabel) => {
             if (this.userTags) {
-
-              if (tagLabel == "Add Custom" ){
-                this.recTags.setState({ readonly: false });
+              if (tagLabel == 'Add Custom') {
+                this.setState({ recTagsIsReadonly: false });
+                //removes the custom
+                this.state.recTagsArray.splice(recLen - 1, 1);
+              } else {
+                //modifies the top tags
+                const oldTags = this.state.userTagsArray;
+                const newTags = oldTags.slice();
+                newTags.push(tagLabel);
+                //removes
+                this.state.recTagsArray.splice(index, 1);
+                this.setState({ userTagsArray: newTags });
               }
-              else{
-              //modifies the top tags
-              const oldTags = this.userTags.state.tags;
-              const newTags = oldTags.slice();
-              newTags.push(`${tagLabel}`);
-              this.userTags.setState({ tags: newTags });
-
-            }
-
-
             }
           }}
-          containerStyle={{ justifyContent: "center" }}
-          inputStyle={{ backgroundColor: "white" }}
+          containerStyle={{ justifyContent: 'center' }}
+          inputStyle={{ backgroundColor: 'white' }}
         />
-      </View> 
+      </View>
     );
   }
 }
@@ -88,13 +90,10 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 10,
-    backgroundColor: "#ecf0f1",
-    padding: 20
+    backgroundColor: '#ecf0f1',
+    padding: 20,
   },
-  //tagColor: {
-  //  backgroundColor: "yellow"
-  //}
 });
